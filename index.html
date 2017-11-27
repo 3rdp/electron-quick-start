@@ -3,17 +3,39 @@
   <head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css" />
   </head>
   <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+    <nav>
+      <div class="nav-wrapper">
+        <a class="brand-logo center">Shopping List</a>
+      </div>
+    </nav>
 
-    <script>
-      // You can also require other files to run in this process
-      require('./renderer.js')
+    <ul></ul>
+
+    <script> 
+      const electron = require("electron")
+      const {ipcRenderer} = electron
+      const ul = document.querySelector("ul")
+
+ipcRenderer.on("item.add", function(e, item) {
+  ul.className = "collection"
+  const li = document.createElement("li")
+  li.className = "collection-item"
+  const itemText = document.createTextNode(item)
+  li.appendChild(itemText)
+  ul.appendChild(li)
+})
+
+ipcRenderer.on("item.clear", function() {
+  ul.innerHTML = ""
+})
+
+ul.addEventListener("dblclick", function(e) {
+  e.target.remove()
+})
+
     </script>
   </body>
 </html>
